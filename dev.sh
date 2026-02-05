@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+# IETA Pipeline Demo - Development Script (macOS/Linux)
+# For Windows, use: powershell -ExecutionPolicy Bypass -File dev.ps1
+
 # Colors for output
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
