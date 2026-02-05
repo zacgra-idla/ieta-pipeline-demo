@@ -1,0 +1,16 @@
+version: 2
+
+models:
+  - name: stg_sample_data
+    description: "Staged sample data with age grouping"
+    columns:
+      - name: id
+        description: "Primary key"
+      - name: name
+        description: "Person name"
+      - name: age
+        description: "Person age"
+      - name: city
+        description: "City of residence"
+      - name: age_group
+        description: "Age category: Young (<30), Middle (30-39), Senior (40+)"
