@@ -64,6 +64,9 @@ Write-Host "  - LMS API: http://localhost:8002 (Job: $($lmsJob.Id))"
 Write-Host "  - State API: http://localhost:8003 (Job: $($stateJob.Id))"
 Write-Host "  - Dagster: http://localhost:8888 (Job: $($dagsterJob.Id))"
 Write-Host ""
+Write-Host "To browse the database:" -ForegroundColor Blue
+Write-Host "  duckdb -ui " -NoNewline; Write-Host "$env:DBT_DUCKDB_PATH" -ForegroundColor Green
+Write-Host ""
 Write-Host "Press Ctrl+C to stop all services" -ForegroundColor Yellow
 Write-Host ""
 
