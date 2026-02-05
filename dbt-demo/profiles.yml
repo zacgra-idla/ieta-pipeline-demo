@@ -3,5 +3,6 @@ dbt_demo:
   outputs:
     dev:
       type: duckdb
-      path: dev.duckdb
+      # Use absolute path so DbtProjectComponent's copy uses the same DB
+      path: "{{ env_var('DBT_DUCKDB_PATH', 'dev.duckdb') }}"
       threads: 4

@@ -1,0 +1,22 @@
+version: 2
+
+sources:
+  - name: raw
+    description: "Raw data extracted from source APIs"
+    schema: raw
+    tables:
+      - name: attendance
+        description: "Attendance data from SIS API"
+        meta:
+          dagster:
+            asset_key: raw_attendance
+      - name: gradebook
+        description: "Gradebook data from LMS API"
+        meta:
+          dagster:
+            asset_key: raw_gradebook
+      - name: isat
+        description: "ISAT assessment data from State Reporting API"
+        meta:
+          dagster:
+            asset_key: raw_isat

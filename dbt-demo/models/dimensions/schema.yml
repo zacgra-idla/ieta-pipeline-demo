@@ -1,0 +1,79 @@
+version: 2
+
+models:
+  - name: dim_student
+    description: "Student dimension with IDs from gradebook and ISAT"
+    meta:
+      dagster:
+        group: dimensions
+    columns:
+      - name: student_key
+        description: "Surrogate key"
+      - name: student_id
+        description: "Natural key from SIS/LMS"
+      - name: student_name
+        description: "Student full name"
+      - name: eduid
+        description: "State education ID (from ISAT)"
+
+  - name: dim_course
+    description: "Course dimension parsed from course_id"
+    meta:
+      dagster:
+        group: dimensions
+    columns:
+      - name: course_key
+        description: "Surrogate key"
+      - name: course_id
+        description: "Natural key (e.g., BUZZ-MATH-7)"
+      - name: subject
+        description: "Subject area (MATH, ELA, SCI)"
+      - name: grade_level
+        description: "Grade level (7, 8)"
+
+  - name: dim_section
+    description: "Section dimension with teacher assignment"
+    meta:
+      dagster:
+        group: dimensions
+    columns:
+      - name: section_key
+        description: "Surrogate key"
+      - name: course_id
+        description: "FK to course"
+      - name: section_id
+        description: "Section identifier"
+      - name: teacher_name
+        description: "Assigned teacher"
+
+  - name: dim_date
+    description: "Date dimension for the school term"
+    meta:
+      dagster:
+        group: dimensions
+    columns:
+      - name: date_key
+        description: "Surrogate key"
+      - name: full_date
+        description: "Calendar date"
+      - name: checkpoint_name
+        description: "Grade checkpoint (Week 3, 6, or 9)"
+      - name: is_checkpoint_date
+        description: "True if this is a checkpoint date"
+      - name: is_school_day
+        description: "True if Mon-Fri"
+
+  - name: dim_assignment
+    description: "Assignment/Test dimension"
+    meta:
+      dagster:
+        group: dimensions
+    columns:
+      - name: assignment_key
+        description: "Surrogate key"
+      - name: assignment_type
+        description: "Assignment or Test"
+      - name: assignment_number
+        description: "Sequence number"
+      - name: due_date
+        description: "Due date"

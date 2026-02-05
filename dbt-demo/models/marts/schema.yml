@@ -1,0 +1,86 @@
+version: 2
+
+models:
+  - name: mart_class_summary
+    description: |
+      Class-level summary metrics replicating the Pivot Table view from Instructions.
+      One row per course/section with aggregated student performance.
+    meta:
+      dagster:
+        group: marts
+    columns:
+      - name: course_id
+        description: Course identifier
+      - name: section_id
+        description: Section identifier
+      - name: total_students
+        description: Count of students in the class
+      - name: lowest_grade
+        description: Minimum current grade in the class
+      - name: highest_grade
+        description: Maximum current grade in the class
+      - name: class_average
+        description: Average current grade across all students
+      - name: count_a
+        description: Students with grade >= 90
+      - name: count_b
+        description: Students with grade 80-89
+      - name: count_c
+        description: Students with grade 70-79
+      - name: count_d
+        description: Students with grade 60-69
+      - name: count_f
+        description: Students with grade < 60
+
+  - name: mart_student_dashboard
+    description: |
+      Student-level dashboard replicating the Student_Summary view from Instructions.
+      Combines grade checkpoints, attendance, missing work, and ISAT scores with risk indicators.
+    meta:
+      dagster:
+        group: marts
+    columns:
+      - name: student_key
+        description: Surrogate key for student dimension
+      - name: student_id
+        description: Natural key for student
+      - name: student_name
+        description: Student full name
+      - name: course_id
+        description: Course identifier
+      - name: section_id
+        description: Section identifier
+      - name: week_3_grade_check
+        description: Cumulative average grade at Week 3 checkpoint
+      - name: week_6_grade_check
+        description: Cumulative average grade at Week 6 checkpoint
+      - name: week_9_grade_check
+        description: Cumulative average grade at Week 9 checkpoint
+      - name: current_grade
+        description: Current overall grade
+      - name: trend_status
+        description: Grade trend (Improving/Declining/Failing/Fluctuating)
+      - name: missing_assignments
+        description: Count of missing assignments
+      - name: missing_assignments_pct
+        description: Percentage of assignments missing
+      - name: days_absent
+        description: Total days absent
+      - name: attendance_pct
+        description: Attendance rate (1.0 = perfect)
+      - name: isat_math_score
+        description: ISAT Math scale score
+      - name: isat_math_level
+        description: ISAT Math performance level
+      - name: isat_ela_score
+        description: ISAT ELA scale score
+      - name: isat_ela_level
+        description: ISAT ELA performance level
+      - name: grade_risk
+        description: Risk level based on current grade (High/Medium/Low/None)
+      - name: attendance_status
+        description: Attendance status (Critical/Warning/Monitor/Good)
+      - name: missing_work_risk
+        description: Risk level based on missing work percentage
+      - name: overall_risk_level
+        description: Composite risk assessment (Critical/High/Medium/Monitor/On Track)
