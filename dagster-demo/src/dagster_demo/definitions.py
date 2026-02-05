@@ -2,7 +2,9 @@ from pathlib import Path
 
 from dagster import Definitions, definitions, load_from_defs_folder
 
-from dagster_demo.resources.ieta_api import IETAApiResource
+from dagster_demo.resources.sis_api import SISApiResource
+from dagster_demo.resources.lms_api import LMSApiResource
+from dagster_demo.resources.state_api import StateApiResource
 
 
 @definitions
@@ -12,7 +14,9 @@ def defs():
         component_defs,
         Definitions(
             resources={
-                "ieta_api": IETAApiResource(),
+                "sis_api": SISApiResource(),
+                "lms_api": LMSApiResource(),
+                "state_api": StateApiResource(),
             }
         ),
     )
