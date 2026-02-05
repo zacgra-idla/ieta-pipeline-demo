@@ -57,6 +57,9 @@ echo "  - LMS API: http://localhost:8002 (PID: $LMS_PID)"
 echo "  - State API: http://localhost:8003 (PID: $STATE_PID)"
 echo "  - Dagster: http://localhost:8888 (PID: $DG_PID)"
 echo ""
+echo -e "${BLUE}To browse the database:${NC}"
+echo -e "  duckdb -ui ${GREEN}$DBT_DUCKDB_PATH${NC}"
+echo ""
 echo "Press Ctrl+C to stop all services"
 
 # Trap Ctrl+C to kill all processes
