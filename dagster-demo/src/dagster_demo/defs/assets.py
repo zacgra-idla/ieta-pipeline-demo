@@ -1,40 +1,34 @@
 """Extract assets that pull data from source APIs and write to DuckDB."""
 
-from pathlib import Path
-
-import duckdb
-import pandas as pd
-
 import dagster as dg
 
+from dagster_demo.resources.duckdb import DuckDBResource
 from dagster_demo.resources.sis_api import SISApiResource
 from dagster_demo.resources.lms_api import LMSApiResource
 from dagster_demo.resources.state_api import StateApiResource
 
-# Path to the DuckDB database used by dbt
-DUCKDB_PATH = Path(__file__).parent.parent.parent.parent.parent / "dbt-demo" / "dev.duckdb"
+import pandas as pd
 
-
-def _write_to_duckdb(df: pd.DataFrame, table_name: str, schema: str = "raw") -> None:
-    """Write a DataFrame to DuckDB, creating the schema if needed."""
-    with duckdb.connect(str(DUCKDB_PATH)) as conn:
-        conn.execute(f"CREATE SCHEMA IF NOT EXISTS {schema}")
-        conn.execute(f"DROP TABLE IF EXISTS {schema}.{table_name}")
-        conn.execute(f"CREATE TABLE {schema}.{table_name} AS SELECT * FROM df")
+# Tag to serialize DuckDB write operations
+DUCKDB_WRITE_TAG = {"dagster/concurrency_key": "duckdb_write"}
 
 
 @dg.asset(
     group_name="extract",
     description="Extract attendance data from SIS",
+    tags=DUCKDB_WRITE_TAG,
 )
-def raw_attendance(sis_api: dg.ResourceParam["SISApiResource"]) -> dg.MaterializeResult:
+def raw_attendance(
+    sis_api: dg.ResourceParam[SISApiResource],
+    duckdb: dg.ResourceParam[DuckDBResource],
+) -> dg.MaterializeResult:
     """Extract attendance data from the SIS API and load into DuckDB."""
     data = sis_api.get_all_attendance()
     df = pd.DataFrame(data)
-    _write_to_duckdb(df, "attendance")
+    row_count = duckdb.write_dataframe(df, "attendance")
     return dg.MaterializeResult(
         metadata={
-            "row_count": len(df),
+            "row_count": row_count,
             "columns": list(df.columns),
         }
     )
@@ -43,15 +37,20 @@ def raw_attendance(sis_api: dg.ResourceParam["SISApiResource"]) -> dg.Materializ
 @dg.asset(
     group_name="extract",
     description="Extract gradebook data from LMS",
+    tags=DUCKDB_WRITE_TAG,
+    deps=[raw_attendance],  # Serialize DuckDB writes
 )
-def raw_gradebook(lms_api: dg.ResourceParam["LMSApiResource"]) -> dg.MaterializeResult:
+def raw_gradebook(
+    lms_api: dg.ResourceParam[LMSApiResource],
+    duckdb: dg.ResourceParam[DuckDBResource],
+) -> dg.MaterializeResult:
     """Extract gradebook data from the LMS API and load into DuckDB."""
     data = lms_api.get_all_gradebook()
     df = pd.DataFrame(data)
-    _write_to_duckdb(df, "gradebook")
+    row_count = duckdb.write_dataframe(df, "gradebook")
     return dg.MaterializeResult(
         metadata={
-            "row_count": len(df),
+            "row_count": row_count,
             "columns": list(df.columns),
         }
     )
@@ -60,15 +59,20 @@ def raw_gradebook(lms_api: dg.ResourceParam["LMSApiResource"]) -> dg.Materialize
 @dg.asset(
     group_name="extract",
     description="Extract ISAT data from State Reporting",
+    tags=DUCKDB_WRITE_TAG,
+    deps=[raw_gradebook],  # Serialize DuckDB writes
 )
-def raw_isat(state_api: dg.ResourceParam["StateApiResource"]) -> dg.MaterializeResult:
+def raw_isat(
+    state_api: dg.ResourceParam[StateApiResource],
+    duckdb: dg.ResourceParam[DuckDBResource],
+) -> dg.MaterializeResult:
     """Extract ISAT data from the State Reporting API and load into DuckDB."""
     data = state_api.get_all_isat()
     df = pd.DataFrame(data)
-    _write_to_duckdb(df, "isat")
+    row_count = duckdb.write_dataframe(df, "isat")
     return dg.MaterializeResult(
         metadata={
-            "row_count": len(df),
+            "row_count": row_count,
             "columns": list(df.columns),
         }
     )
