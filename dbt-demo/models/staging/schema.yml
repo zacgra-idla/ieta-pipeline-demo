@@ -1,0 +1,18 @@
+version: 2
+
+models:
+  - name: stg_gradebook
+    description: "Staged gradebook data with renamed columns"
+    meta:
+      dagster:
+        group: staging
+  - name: stg_attendance
+    description: "Staged attendance data with renamed columns"
+    meta:
+      dagster:
+        group: staging
+  - name: stg_isat
+    description: "Staged ISAT assessment data"
+    meta:
+      dagster:
+        group: staging

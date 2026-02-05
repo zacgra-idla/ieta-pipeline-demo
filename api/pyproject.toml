@@ -1,0 +1,11 @@
+[project]
+name = "education-data-api"
+version = "0.1.0"
+description = "APIs for SIS, LMS, and State Reporting data"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi>=0.128.1",
+    "pandas>=3.0.0",
+    "pyarrow>=23.0.0",
+    "uvicorn>=0.40.0",
+]

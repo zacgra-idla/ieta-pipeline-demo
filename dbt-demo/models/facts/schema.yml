@@ -1,0 +1,64 @@
+version: 2
+
+models:
+  - name: fct_grade
+    description: "Grade fact table - one row per student per assignment"
+    meta:
+      dagster:
+        group: facts
+    columns:
+      - name: score
+        description: "Grade score (0-100)"
+      - name: is_submitted
+        description: "True if assignment was submitted"
+
+  - name: fct_attendance
+    description: "Attendance fact table - one row per student per day"
+    meta:
+      dagster:
+        group: facts
+    columns:
+      - name: attendance_status
+        description: "Present or Absent"
+      - name: is_absent
+        description: "True if absent"
+
+  - name: fct_assessment
+    description: "ISAT assessment fact - one row per student"
+    meta:
+      dagster:
+        group: facts
+    columns:
+      - name: math_scale_score
+        description: "ISAT math scale score"
+      - name: math_performance_level
+        description: "ISAT math level (Below Basic, Basic, Proficient, Advanced)"
+      - name: ela_scale_score
+        description: "ISAT ELA scale score"
+      - name: ela_performance_level
+        description: "ISAT ELA level"
+
+  - name: fct_student_snapshot
+    description: "Student summary snapshot implementing all transformations from Instructions"
+    meta:
+      dagster:
+        group: facts
+    columns:
+      - name: current_grade
+        description: "Current overall grade"
+      - name: missing_assignments
+        description: "Count of missing assignments"
+      - name: missing_pct
+        description: "Percentage of assignments missing"
+      - name: week_3_grade
+        description: "Cumulative grade as of Week 3 checkpoint"
+      - name: week_6_grade
+        description: "Cumulative grade as of Week 6 checkpoint"
+      - name: week_9_grade
+        description: "Cumulative grade as of Week 9 checkpoint"
+      - name: trend_status
+        description: "Failing, Improving, Declining, or Fluctuating"
+      - name: days_absent
+        description: "Total days absent"
+      - name: attendance_pct
+        description: "Attendance percentage (1 - absences/total)"

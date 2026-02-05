@@ -1,0 +1,13 @@
+version: 2
+
+models:
+  - name: int_grades_long
+    description: "Unpivoted gradebook - one row per student per assignment"
+    meta:
+      dagster:
+        group: intermediate
+  - name: int_attendance_long
+    description: "Unpivoted attendance - one row per student per school day"
+    meta:
+      dagster:
+        group: intermediate
