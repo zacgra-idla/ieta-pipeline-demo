@@ -2,11 +2,18 @@
 State Reporting API - serves ISAT assessment data.
 """
 
+import json
 from pathlib import Path
 from typing import Optional
 
 import pandas as pd
 from fastapi import FastAPI, HTTPException, Query
+
+
+def df_to_records(df: pd.DataFrame) -> list[dict]:
+    """Convert DataFrame to list of dicts, handling NaN values."""
+    # to_json handles NaN -> null, then parse back to get Python None
+    return json.loads(df.to_json(orient="records"))
 
 app = FastAPI(
     title="State Reporting API",
@@ -60,7 +67,7 @@ def get_isat(
         "total": total,
         "limit": limit,
         "offset": offset,
-        "data": df.to_dict(orient="records"),
+        "data": df_to_records(df),
     }
 
 
@@ -73,7 +80,7 @@ def get_student_isat(eduid: str):
     if student_df.empty:
         raise HTTPException(status_code=404, detail=f"Student with EDUID {eduid} not found")
 
-    return student_df.to_dict(orient="records")
+    return df_to_records(student_df)
 
 
 if __name__ == "__main__":
